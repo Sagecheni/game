@@ -24,6 +24,7 @@ class Player(pygame.sprite.Sprite):
         # 碰撞
         self.hitbox = self.rect.copy().inflate((-126, -70))  # 碰撞箱
         self.collision_sprites = collision_sprites
+
         # timers
         self.timers = {
             'tool use': Timer(350, self.use_tool),
@@ -153,8 +154,8 @@ class Player(pygame.sprite.Sprite):
                             self.hitbox.right = sprite.hitbox.left  # 玩家从右边碰撞，则碰撞位置在物体的左边
                         if self.direction.x < 0:
                             self.hitbox.left = sprite.hitbox.right
-                        self.rect.centerx = sprite.hitbox.centerx
-                        self.pos.x = sprite.hitbox.centerx
+                        self.rect.centerx = self.hitbox.centerx
+                        self.pos.x = self.hitbox.centerx
 
                     if direction == 'vertical':
                         if self.direction.y > 0:  # 向下走

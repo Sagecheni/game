@@ -64,7 +64,7 @@ class WildFlower(Generic):
 
 
 class Tree(Generic):
-    def __init__(self, pos, surf, groups, name):
+    def __init__(self, pos, surf, groups, name, player_add):
         super().__init__(pos, surf, groups)
 
         # 树的属性
@@ -79,6 +79,8 @@ class Tree(Generic):
         self.apple_sprites = pygame.sprite.Group()
         self.create_fruit()
 
+        self.player_add = player_add
+
     def damage(self):
         # 破坏树
         self.health -= 1
@@ -86,22 +88,24 @@ class Tree(Generic):
         # 掉落苹果
         if len(self.apple_sprites.sprites()) > 0:
             random_apple = choice(self.apple_sprites.sprites())
-            random_apple.kill()
-            Particle(  # 粒子效果
+            Particle(
                 pos=random_apple.rect.topleft,
                 surf=random_apple.image,
                 groups=self.groups()[0],
                 z=LAYERS['fruit'])
+            self.player_add('apple')
+            random_apple.kill()
 
     def create_fruit(self):
         for pos in self.apple_pos:
             if randint(0, 10) < 2:
                 x = pos[0] + self.rect.left
                 y = pos[1] + self.rect.top
-                Generic((x, y),
-                        self.apple_surf,
-                        [self.apple_sprites, self.groups()[0]],
-                        z=LAYERS['fruit'])
+                Generic(
+                    pos=(x, y),
+                    surf=self.apple_surf,
+                    groups=[self.apple_sprites, self.groups()[0]],
+                    z=LAYERS['fruit'])
 
     def check_death(self):
         if self.health <= 0:
@@ -110,6 +114,7 @@ class Tree(Generic):
             self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
             self.hitbox = self.rect.copy().inflate(-10, -self.rect.height * 0.6)
             self.alive = False
+            self.player_add('wood')
 
     def update(self, dt):
         if self.alive:

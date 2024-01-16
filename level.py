@@ -18,6 +18,9 @@ class Level:
         self.setup()
         self.overlay = Overlay(self.player)
 
+    def player_add(self, item):
+        self.player.item_inventory[item] += 1
+
     def setup(self):
         tmx_data = load_pygame('./data/map.tmx')
 
@@ -39,7 +42,12 @@ class Level:
             Water((x * TILE_SIZE, y * TILE_SIZE), water_frames, self.all_sprites)
         # 树
         for obj in tmx_data.get_layer_by_name('Trees'):
-            Tree((obj.x, obj.y), obj.image, [self.all_sprites, self.collision_sprites, self.tree_sprites], obj.name)
+            Tree(
+                pos=(obj.x, obj.y),
+                surf=obj.image,
+                groups=[self.all_sprites, self.collision_sprites, self.tree_sprites],
+                name=obj.name,
+                player_add=self.player_add)
         # 花
         for obj in tmx_data.get_layer_by_name('Decoration'):
             WildFlower((obj.x, obj.y), obj.image, [self.all_sprites, self.collision_sprites])

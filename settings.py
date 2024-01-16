@@ -1,27 +1,20 @@
-from pygame.math import Vector2 as vec
+from pygame.math import Vector2
 
-'''
-settings文件
-存放大部分常量
-
-'''
-
-# UI
+# screen
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 TILE_SIZE = 64
 
-# overlay position
+# overlay positions
 OVERLAY_POSITIONS = {
     'tool': (40, SCREEN_HEIGHT - 15),
-    'seed': (70, SCREEN_HEIGHT - 5),
-}
+    'seed': (70, SCREEN_HEIGHT - 5)}
 
 PLAYER_TOOL_OFFSET = {
-    'left': vec(-50, 40),
-    'right': vec(50, 40),
-    'up': vec(0, -10),
-    'down': vec(0, 50),
+    'left': Vector2(-50, 40),
+    'right': Vector2(50, 40),
+    'up': Vector2(0, -10),
+    'down': Vector2(0, 50)
 }
 
 LAYERS = {
@@ -35,7 +28,7 @@ LAYERS = {
     'main': 7,
     'house top': 8,
     'fruit': 9,
-    'rain drops': 10,
+    'rain drops': 10
 }
 
 APPLE_POS = {
@@ -44,6 +37,17 @@ APPLE_POS = {
 }
 
 GROW_SPEED = {
-    'cron': 1,
+    'corn': 1,
     'tomato': 0.7
+}
+
+SALE_PRICES = {
+    'wood': 4,
+    'apple': 2,
+    'corn': 10,
+    'tomato': 20
+}
+PURCHASE_PRICES = {
+    'corn': 4,
+    'tomato': 5
 }

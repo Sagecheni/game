@@ -22,7 +22,7 @@ class Interaction(Generic):
 
 class Water(Generic):
     def __init__(self, pos, frames, groups):
-        # animation setup
+        # 动画初始化
         self.frames = frames
         self.frame_index = 0
         # sprite setup
@@ -31,7 +31,7 @@ class Water(Generic):
                          z=LAYERS['water'])
 
     def animate(self, dt):
-        self.frame_index += 4 * dt
+        self.frame_index += 5 * dt
         if self.frame_index >= len(self.frames):  # 控制状态变化的个数，不用取余以免多次计算
             self.frame_index = 0
         self.image = self.frames[int(self.frame_index)]
@@ -81,9 +81,16 @@ class Tree(Generic):
 
         self.player_add = player_add
 
+        # 音乐
+        self.axe_sound = pygame.mixer.Sound('./audio/axe.mp3')
+
     def damage(self):
         # 破坏树
+
         self.health -= 1
+        # 破坏音效
+
+        self.axe_sound.play()
 
         # 掉落苹果
         if len(self.apple_sprites.sprites()) > 0:

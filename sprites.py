@@ -13,6 +13,13 @@ class Generic(pygame.sprite.Sprite):
         self.hitbox = self.rect.copy().inflate(-self.rect.width * 0.2, -self.rect.height * 0.75)
 
 
+class Interaction(Generic):
+    def __init__(self, pos, size, groups, name):
+        surf = pygame.Surface(size)
+        super().__init__(pos, surf, groups)
+        self.name = name
+
+
 class Water(Generic):
     def __init__(self, pos, frames, groups):
         # animation setup
@@ -31,6 +38,23 @@ class Water(Generic):
 
     def update(self, dt):
         self.animate(dt)
+
+
+class Particle(Generic):  # 粒子效果
+    def __init__(self, pos, surf, groups, z, duration=200):
+        super().__init__(pos, surf, groups, z)
+        self.start_time = pygame.time.get_ticks()
+        self.duration = duration
+
+        mask_surf = pygame.mask.from_surface(self.image)
+        new_surf = mask_surf.to_surface()
+        new_surf.set_colorkey((0, 0, 0))
+        self.image = new_surf
+
+    def update(self, dt):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.start_time > self.duration:
+            self.kill()
 
 
 class WildFlower(Generic):
@@ -63,6 +87,11 @@ class Tree(Generic):
         if len(self.apple_sprites.sprites()) > 0:
             random_apple = choice(self.apple_sprites.sprites())
             random_apple.kill()
+            Particle(  # 粒子效果
+                pos=random_apple.rect.topleft,
+                surf=random_apple.image,
+                groups=self.groups()[0],
+                z=LAYERS['fruit'])
 
     def create_fruit(self):
         for pos in self.apple_pos:
@@ -76,6 +105,7 @@ class Tree(Generic):
 
     def check_death(self):
         if self.health <= 0:
+            Particle(self.rect.topleft, self.image, self.groups()[0], LAYERS['fruit'], 300)
             self.image = self.stump_surf
             self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
             self.hitbox = self.rect.copy().inflate(-10, -self.rect.height * 0.6)
